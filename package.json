@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node dist/index.js",
     "start:dev": "ts-node-dev src/index.ts",
+    "build": "tsc",
     "lint": "eslint",
     "e2e": "NODE_ENV=e2e jest --config jest.e2e.config.json --verbose --forceExit --runInBand",
     "e2e:ci": "NODE_ENV=ci jest --config jest.e2e.config.json --verbose --forceExit --runInBand",
