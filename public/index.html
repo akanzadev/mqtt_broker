@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/socket.io/socket.io.js"></script>
+
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>IOT Project</h1>
+
+    <button id="led-btn-active">Activate Led</button>
+    <button id="led-btn-inactive">Inactivate Led</button>
+
+    <canvas id="mychart"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      window.addEventListener("load", () => {
+        const activeLedBtn = document.getElementById("led-btn-active");
+        const inactivateLedBtn = document.getElementById("led-btn-inactive");
+
+        activeLedBtn.addEventListener("click", async () => {
+          const response = await fetch("http://localhost:3000/publish-mqtt", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+            },
+            body: JSON.stringify({
+              topic: "Input/01",
+              message: "1",
+            }),
+          }).catch((error) => {
+            console.error("Failed to activate led", error);
+          });
+
+          if (response.ok) {
+            console.log("Led activated");
+          } else {
+            console.error("Failed to activate led");
+          }
+        });
+
+        inactivateLedBtn.addEventListener("click", async () => {
+          const response = await fetch("http://localhost:3000/publish-mqtt", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+            },
+            body: JSON.stringify({
+              topic: "Input/01",
+              message: "0",
+            }),
+          }).catch((error) => {
+            console.error("Failed to inactivate led", error);
+          });
+
+          if (response.ok) {
+            console.log("Led inactivated");
+          } else {
+            console.error("Failed to inactivate led");
+          }
+        });
+
+        const socket = io();
+        let myChart = null; // Declarar la variable para almacenar el gráfico
+
+        // Inicializa el gráfico vacío
+        const ctx = document.getElementById("mychart").getContext("2d");
+        myChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: [], // Inicialmente vacío
+            datasets: [
+              {
+                label: "Luminosidad",
+                data: [], // Inicialmente vacío
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "rgba(255, 99, 132, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            animation: false, // Desactivar la animación
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+
+        socket.on("fotoresistor", (value) => {
+          const { topic, message } = JSON.parse(JSON.stringify(value));
+
+          // TOPIC: Output/01
+          // MESSAGE: "{\"deviceId\":{\"_id\":\"613f4b3b7f4b3b001f4b3b00\",\"type\":\"photoresistor\",\"location\":\"Villa El Salvador\",\"status\":\"activo\",\"lastCommunication\":\"2024-09-24T14:24:18.430Z\"},\"metricType\":\"light\",\"value\":1344,\"timestamp\":\"2024-09-24T15:41:26.100Z\",\"_id\":\"66f2ddd861a8cf926b35d4d8\",\"__v\":0}"
+          // USAR FORMATOS DE MENSAJE JSON PARA ARMAR EL GRAFICO
+          const data = JSON.parse(message);
+          console.log("🚀 ~ file: index.html:101 ~ socket.on ~ data:", data);
+
+          // Agrega el nuevo valor al final del dataset y la nueva etiqueta de tiempo
+          myChart.data.labels.push(data.timestamp);
+          myChart.data.datasets[0].data.push(data.value);
+
+          // Limita la cantidad de puntos visibles en el gráfico
+          if (myChart.data.labels.length > 20) {
+            // Ajusta el límite como desees
+            myChart.data.labels.shift(); // Elimina la primera etiqueta
+            myChart.data.datasets[0].data.shift(); // Elimina el primer dato
+          }
+
+          // Actualiza el gráfico sin animación
+          myChart.update();
+        });
+      });
+    </script>
+  </body>
+</html>

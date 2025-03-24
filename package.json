@@ -1,0 +1,32 @@
+{
+  "name": "c3m_mqtt_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:dev": "ts-node-dev src/index.ts",
+    "lint": "eslint",
+    "e2e": "NODE_ENV=e2e jest --config jest.e2e.config.json --verbose --forceExit --runInBand",
+    "e2e:ci": "NODE_ENV=ci jest --config jest.e2e.config.json --verbose --forceExit --runInBand",
+    "e2e:coverage": "NODE_ENV=e2e jest --config jest.e2e.config.json --verbose --detectOpenHandles --forceExit --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.6.3",
+    "mqtt": "^5.10.1",
+    "socket.io": "^4.8.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/mqtt": "^2.5.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.2"
+  }
+}
