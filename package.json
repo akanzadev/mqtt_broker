@@ -14,7 +14,10 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
