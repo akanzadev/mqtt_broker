@@ -23,7 +23,7 @@ A real-time data broker system built with TypeScript, MQTT, and Socket.IO for ef
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/c3m_broker.git
+git clone https://github.com/akanzadev/mqtt_broker
 cd c3m_broker
 ```
 
