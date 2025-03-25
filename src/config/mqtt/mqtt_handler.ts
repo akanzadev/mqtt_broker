@@ -73,7 +73,11 @@ export class MqttHandler {
         const rta = await newMetric.populate("deviceId");
 
         // Emitimos el mensaje recibido por MQTT a todos los clientes conectados vía Socket.IO
-        this.sockets.emitMessageToClients(topic, JSON.stringify(rta));
+        this.sockets.emitMessageToClients(
+          metric.metricType,
+          topic,
+          JSON.stringify(rta)
+        );
       } catch (error) {
         console.error("Error al crear la métrica:", error);
       }
@@ -98,6 +102,6 @@ export class MqttHandler {
       throw new Error("Mqtt client is not connected");
     }
 
-    this.mqttClient.publish(topic, message);
+    this.mqttClient.publish(topic, JSON.stringify(message));
   }
 }

@@ -20,8 +20,8 @@ class Sockets {
     });
   }
 
-  emitMessageToClients(topic: string, message: string): void {
-    this.io.emit("fotoresistor", { topic, message });
+  emitMessageToClients(metric: string, topic: string, message: string): void {
+    this.io.emit(metric, { topic, message });
   }
 }
 

@@ -8,27 +8,35 @@
     <title>Document</title>
   </head>
   <body>
-    <h1>IOT Project</h1>
+    <main class="container">
+      <h1>TEST RESISTOR AND LED</h1>
 
-    <button id="led-btn-active">Activate Led</button>
-    <button id="led-btn-inactive">Inactivate Led</button>
+      <button id="led-btn-active">Activate Led</button>
+      <button id="led-btn-inactive">Inactivate Led</button>
 
-    <canvas id="mychart"></canvas>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <canvas id="mychart"></canvas>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </main>
     <script>
       window.addEventListener("load", () => {
         const activeLedBtn = document.getElementById("led-btn-active");
         const inactivateLedBtn = document.getElementById("led-btn-inactive");
+        const API_URL = window.location.origin;
 
         activeLedBtn.addEventListener("click", async () => {
-          const response = await fetch("http://localhost:3000/publish-mqtt", {
+          const response = await fetch(`${API_URL}/publish-mqtt`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json; charset=utf-8",
             },
             body: JSON.stringify({
               topic: "Input/01",
-              message: "1",
+              message: {
+                deviceId: "613f4b3b7f4b3b001f4b3b00",
+                metricType: "light",
+                value: 1,
+                timestamp: new Date().getTime(),
+              },
             }),
           }).catch((error) => {
             console.error("Failed to activate led", error);
@@ -42,14 +50,19 @@
         });
 
         inactivateLedBtn.addEventListener("click", async () => {
-          const response = await fetch("http://localhost:3000/publish-mqtt", {
+          const response = await fetch(`${API_URL}/publish-mqtt`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json; charset=utf-8",
             },
             body: JSON.stringify({
               topic: "Input/01",
-              message: "0",
+              message: {
+                deviceId: "613f4b3b7f4b3b001f4b3b00",
+                metricType: "light",
+                value: 0,
+                timestamp: new Date().getTime(),
+              },
             }),
           }).catch((error) => {
             console.error("Failed to inactivate led", error);
@@ -91,14 +104,27 @@
           },
         });
 
-        socket.on("fotoresistor", (value) => {
+        socket.on("light", (value) => {
+          const { topic, message } = {
+            ...value,
+            message: JSON.parse(value.message),
+          };
+          if (message.value === 1) {
+            document.querySelector("main").style.backgroundColor = "green";
+          } else if (message.value === 0) {
+            document.querySelector("main").style.backgroundColor = "red";
+          } else {
+            document.querySelector("main").style.backgroundColor = "white";
+          }
+        });
+
+        socket.on("photoresistor", (value) => {
           const { topic, message } = JSON.parse(JSON.stringify(value));
 
           // TOPIC: Output/01
           // MESSAGE: "{\"deviceId\":{\"_id\":\"613f4b3b7f4b3b001f4b3b00\",\"type\":\"photoresistor\",\"location\":\"Villa El Salvador\",\"status\":\"activo\",\"lastCommunication\":\"2024-09-24T14:24:18.430Z\"},\"metricType\":\"light\",\"value\":1344,\"timestamp\":\"2024-09-24T15:41:26.100Z\",\"_id\":\"66f2ddd861a8cf926b35d4d8\",\"__v\":0}"
           // USAR FORMATOS DE MENSAJE JSON PARA ARMAR EL GRAFICO
           const data = JSON.parse(message);
-          console.log("🚀 ~ file: index.html:101 ~ socket.on ~ data:", data);
 
           // Agrega el nuevo valor al final del dataset y la nueva etiqueta de tiempo
           myChart.data.labels.push(data.timestamp);
