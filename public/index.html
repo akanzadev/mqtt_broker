@@ -132,7 +132,18 @@
           const data = JSON.parse(message);
 
           // Agrega el nuevo valor al final del dataset y la nueva etiqueta de tiempo
-          myChart.data.labels.push(data.timestamp);
+          const timestamp = new Date(data.timestamp);
+          const formattedTime = timestamp.toLocaleString("es-PE", {
+            timeZone: "America/Lima",
+            hour12: false,
+            year: "2-digit",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+          myChart.data.labels.push(formattedTime);
           myChart.data.datasets[0].data.push(data.value);
 
           // Limita la cantidad de puntos visibles en el gráfico
