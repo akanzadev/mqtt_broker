@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="./css/index.css" />
 
     <title>Document</title>
   </head>
@@ -21,7 +22,10 @@
       window.addEventListener("load", () => {
         const activeLedBtn = document.getElementById("led-btn-active");
         const inactivateLedBtn = document.getElementById("led-btn-inactive");
+        const container = document.querySelector(".container");
         const API_URL = window.location.origin;
+        const socket = io();
+        let myChart = null; // Declarar la variable para almacenar el gráfico
 
         activeLedBtn.addEventListener("click", async () => {
           const response = await fetch(`${API_URL}/publish-mqtt`, {
@@ -75,9 +79,6 @@
           }
         });
 
-        const socket = io();
-        let myChart = null; // Declarar la variable para almacenar el gráfico
-
         // Inicializa el gráfico vacío
         const ctx = document.getElementById("mychart").getContext("2d");
         myChart = new Chart(ctx, {
@@ -110,11 +111,15 @@
             message: JSON.parse(value.message),
           };
           if (message.value === 1) {
-            document.querySelector("main").style.backgroundColor = "green";
-          } else if (message.value === 0) {
-            document.querySelector("main").style.backgroundColor = "red";
+            container.classList.remove("red-bg");
+            container.classList.add("green-bg");
+            activeLedBtn.style.backgroundColor = "#218838";
+            inactivateLedBtn.style.backgroundColor = "#dc3545";
           } else {
-            document.querySelector("main").style.backgroundColor = "white";
+            container.classList.remove("green-bg");
+            container.classList.add("red-bg");
+            activeLedBtn.style.backgroundColor = "#28a745";
+            inactivateLedBtn.style.backgroundColor = "#c82333";
           }
         });
 

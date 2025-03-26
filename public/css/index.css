@@ -1,0 +1,85 @@
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  transition: background-color 0.5s ease-in-out;
+}
+
+.container {
+  text-align: center;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 500px;
+  transition: background-color 0.5s ease-in-out;
+}
+
+h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Botones */
+button {
+  border: none;
+  padding: 12px 20px;
+  margin: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+/* Botón Activar LED */
+#led-btn-active {
+  background-color: #28a745;
+  color: white;
+}
+
+#led-btn-active:hover {
+  background-color: #218838;
+}
+
+#led-btn-active:active {
+  transform: scale(0.95);
+}
+
+/* Botón Desactivar LED */
+#led-btn-inactive {
+  background-color: #dc3545;
+  color: white;
+}
+
+#led-btn-inactive:hover {
+  background-color: #c82333;
+}
+
+#led-btn-inactive:active {
+  transform: scale(0.95);
+}
+
+/* Fondo cuando LED está encendido */
+.green-bg {
+  background-color: #d4edda;
+}
+
+/* Fondo cuando LED está apagado */
+.red-bg {
+  background-color: #f8d7da;
+}
+
+canvas {
+  width: 100% !important;
+  max-width: 400px;
+  height: auto !important;
+  margin-top: 20px;
+}
